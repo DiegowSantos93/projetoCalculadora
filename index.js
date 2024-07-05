@@ -2,7 +2,7 @@ console.log('Bem vindo a calculadora!\nEu faço cálculos de adição, subtraç�
 
 const prompt = require("prompt-sync")({ sigint: true });
 
-function numero1() {
+function numero1(){
     let num1 = prompt('Digite um número: ');
     num1 = parseFloat(num1);
     if (!isNaN(num1)){
@@ -13,7 +13,7 @@ function numero1() {
     }
 }
 
-function numero2() {
+function numero2(){
     let num2 = prompt('Digite o segundo número: ');
     num2 = parseFloat(num2);
     if (!isNaN(num2)){
@@ -40,8 +40,13 @@ function multiplicacao(n1,n2){
 }
 
 function divisao(n1,n2){
-    let dividir = n1 / n2;
-    return dividir
+    if (n2 === 0){
+        console.log('Divisão por zero não é permitida.');
+        return numero2();
+    } else {
+        let dividir = n1 / n2;
+        return dividir
+    }
 }
 
 function porcentagem(n1,n2){
@@ -49,38 +54,103 @@ function porcentagem(n1,n2){
     return percentual
 }
 
-function calculadora() {
-    let n1 = numero1();
-    let n2 = numero2();
-
-    console.log('Escolha a operação:');
-    console.log('1 - Adição');
-    console.log('2 - Subtração');
-    console.log('3 - Multiplicação');
-    console.log('4 - Divisão');
-    console.log('5 - Porcentagem');
-
-    let opcao = prompt('Digite o número da operação desejada: ');
-
-    switch (opcao) {
-        case '1':
-            console.log('Resultado da adição:', adicao(n1, n2));
-            break;
-        case '2':
-            console.log('Resultado da subtração:', subtracao(n1, n2));
-            break;
-        case '3':
-            console.log('Resultado da multiplicação:', multiplicacao(n1, n2));
-            break;
-        case '4':
-            console.log('Resultado da divisão:', divisao(n1, n2));
-            break;
-        case '5':
-            console.log('Resultado da porcentagem:', porcentagem(n1, n2));
-            break;
-        default:
-            console.log('Opção inválida. Por favor, escolha uma operação válida.');
-    }
-}
+let resultado = 0;
 
 calculadora();
+
+function calculadora(){
+    let n1 = numero1();
+   
+    console.log('Escolha a operação:\n1 - Adição\n2 - Subtração\n3 - Multiplicação\n4 - Divisão\n5 - Porcentagem\n0 - Para encerrar');
+ 
+    let opcao = Number(prompt('Digite o número da operação desejada: '));
+        opcao = parseFloat(opcao)
+        if (opcao >= 0 && opcao <= 5){
+            if (opcao == 0){
+                console.log('Encerrando a calculadora, até logo!')
+                process.exit();
+            } else {
+                let n2 = numero2();
+        
+                switch (opcao) {
+                    case 1:
+                        console.log(`${n1} + ${n2} =`, adicao(n1, n2));
+                        resultado = adicao(n1,n2);
+                        break;
+                    case 2:
+                        console.log(`${n1} - ${n2} =`, subtracao(n1, n2));
+                        resultado = subtracao(n1,n2);
+                        break;
+                    case 3:
+                        console.log(`${n1} X ${n2} =`, multiplicacao(n1, n2));
+                        resultado = multiplicacao(n1,n2);
+                        break;
+                    case 4:
+                        if (n2 === 0) {
+                            console.log('Divisão por zero não é permitida.');
+                            return calculadora();
+                        }
+                        console.log(`${n1} / ${n2} =`, divisao(n1, n2));
+                        resultado = divisao(n1,n2);
+                        break;
+                    case 5:
+                        console.log(`${n1} % ${n2} =`, porcentagem(n1, n2));
+                        resultado = porcentagem(n1,n2);
+                        break;
+                }
+                recalculo();
+            }
+        } else {
+            console.log('Não é uma opção válida, tente novamente.');
+            return calculadora();
+        }
+}
+
+function recalculo(){
+    
+    if (resultado === 0){
+        resultado = calculadora();
+    }        
+    console.log('Escolha a operação:\n1 - Adição\n2 - Subtração\n3 - Multiplicação\n4 - Divisão\n5 - Porcentagem\n0 - Para encerrar');
+         
+    let opcao = prompt('Digite o número da operação desejada: ');
+        opcao = parseFloat(opcao);
+        if (opcao >= 0 && opcao <= 5){
+            if (opcao == 0){
+                console.log('Encerrando a calculadora, até logo!')
+                process.exit();
+            } else {
+                let n2 = numero2();
+        
+                switch (opcao) {
+                case 1:
+                    console.log(`${resultado} + ${n2} =`, adicao(resultado, n2));
+                    resultado = adicao(resultado, n2)
+                    break;
+                case 2:
+                    console.log(`${resultado} - ${n2} =`, subtracao(resultado, n2));
+                    resultado = subtracao(resultado, n2)
+                    break;
+                case 3:
+                    console.log(`${resultado} X ${n2} =`, multiplicacao(resultado, n2));
+                    resultado = multiplicacao(resultado, n2)
+                    break;
+                case 4:
+                    if (n2 === 0) {
+                        console.log('Divisão por zero não é permitida.');
+                        return recalculo();
+                    }
+                    console.log(`${resultado} / ${n2} =`, divisao(resultado, n2));
+                    resultado = divisao(resultado, n2)
+                    break;
+                case 5:
+                    console.log(`${resultado} % ${n2} =`, porcentagem(resultado, n2));
+                    resultado = porcentagem(resultado, n2)
+                }
+            recalculo(); 
+        }
+        } else {
+            console.log('Não é uma opção válida, tente novamente.');
+        return recalculo();
+        }       
+} 
